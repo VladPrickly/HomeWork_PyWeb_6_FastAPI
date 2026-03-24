@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from asyncpg.exceptions import UniqueViolationError
 from models import Advertisement
-from schemas import AdvertisementCreate
+from schemas import AdvertisementCreate, AdvertisementUpdate
 
 from sqlalchemy import select
 from datetime import datetime, timezone
@@ -31,5 +31,47 @@ async def add_item(
         else:
             raise e
 
-async def add_item():
-    ...
+
+async def get_item(
+    session: AsyncSession,
+    orm_model: type[Advertisement],
+    item_id: int
+) -> Advertisement:
+
+    adv = select(orm_model).where(orm_model.id == item_id)
+    result = await session.execute(adv)
+    item = result.scalar_one_or_none()
+    if not item:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"{orm_model.__name__} with id {item_id} not found"
+        )
+    return item
+
+
+async def update_item(
+    session: AsyncSession,
+    orm_model: type[Advertisement],
+    item_id: int,
+    update_data: AdvertisementUpdate
+) -> Advertisement:
+
+    item = await get_item(session, orm_model, item_id)
+
+    # Преобразуем update_data в словарь, исключая поля со значением None
+    update_dict = update_data.model_dump(exclude_unset=True)
+
+    for key, value in update_dict.items():
+        setattr(item, key, value)
+
+    # Если дело отмечено как выполненное, и finish_time ещё нет, ставим текущее время
+    if update_dict.get('done') and item.finish_time is None:
+        item.finish_time = datetime.now(timezone.utc)
+
+    # Если дело снова стало невыполненным, сбрасываем finish_time
+    if update_dict.get('done') is False:
+        item.finish_time = None
+
+    await session.commit()
+    await session.refresh(item)
+    return item
