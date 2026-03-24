@@ -5,9 +5,9 @@ from sqlalchemy import Integer, Text, String, Column
 from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
-
 from datetime import datetime
 from typing import Optional
+
 
 class AdvertisementBase(BaseModel):
     title: str
