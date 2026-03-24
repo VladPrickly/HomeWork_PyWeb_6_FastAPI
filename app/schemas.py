@@ -26,3 +26,6 @@ class AdvertisementUpdate(BaseModel):
 
 class AdvertisementResponse(AdvertisementBase):
     id: int
+
+class OKResponse(BaseModel):
+    status: str = "ok"

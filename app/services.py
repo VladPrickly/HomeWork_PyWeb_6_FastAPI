@@ -75,3 +75,15 @@ async def update_item(
     await session.commit()
     await session.refresh(item)
     return item
+
+async def delete_item(
+    session: AsyncSession,
+    orm_model: type[Advertisement],
+    item_id: int
+) -> None:
+    """
+    Удаляет запись.
+    """
+    item = await get_item(session, orm_model, item_id)
+    await session.delete(item)
+    await session.commit()

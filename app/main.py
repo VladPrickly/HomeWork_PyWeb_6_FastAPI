@@ -6,8 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from asyncpg.exceptions import UniqueViolationError
 from db import Session
 from models import Advertisement
-from schemas import AdvertisementResponse, AdvertisementCreate, AdvertisementUpdate
-from services import add_item, get_item, update_item
+from schemas import AdvertisementResponse, AdvertisementCreate, AdvertisementUpdate, OKResponse
+from services import add_item, get_item, update_item, delete_item
 from lifespan import lifespan
 from dependencies import get_db_session
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -23,7 +23,7 @@ SessionDep = Annotated[AsyncSession, Depends(get_db_session)]
 
 @app.get('/')
 def print_hello_world():
-    return {'Greeting': 'Hello world'}
+    return {'message': 'Hello world'}
 
 # POST
 @app.post("/advertisement", response_model=AdvertisementResponse, status_code=201, summary="Создаем новое объявление")
@@ -48,9 +48,12 @@ async def update_advertisement(advertisement_id: int, update_data: Advertisement
 
 
 # DELETE
-@app.delete("/advertisement/{advertisement_id}", status_code=200, summary="Удаляем объявление")
+@app.delete("/advertisement/{advertisement_id}", response_model=OKResponse, status_code=200, summary="Удаляем объявление")
 async def delete_advertisement(advertisement_id: int, session: SessionDep):
-    ...
+
+    await delete_item(session, Advertisement, advertisement_id)
+    return OKResponse()
+
 
 # GET (querystring)
 @app.get("/advertisement", response_model=List[AdvertisementResponse])
