@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -87,3 +89,18 @@ async def delete_item(
     item = await get_item(session, orm_model, item_id)
     await session.delete(item)
     await session.commit()
+
+
+async def search_item(db: AsyncSession,
+            title: Optional[str] = None,
+            description: Optional[str] = None,
+            author: Optional[str] = None):
+    query = db.query(models.Advertisement)
+    if title:
+        query = query.filter(models.Advertisement.title.ilike(f"%{title}%"))
+    if description:
+        query = query.filter(models.Advertisement.description.ilike(f"%{description}%"))
+    if author:
+        query = query.filter(models.Advertisement.author.ilike(f"%{author}%"))
+    return query.all()
+
