@@ -94,12 +94,15 @@ async def delete_item(
 async def search_item(db: AsyncSession,
             title: Optional[str] = None,
             description: Optional[str] = None,
+            price: Optional[float] = None,
             author: Optional[str] = None):
     query = db.query(models.Advertisement)
     if title:
         query = query.filter(models.Advertisement.title.ilike(f"%{title}%"))
     if description:
         query = query.filter(models.Advertisement.description.ilike(f"%{description}%"))
+    if description:
+        query = query.filter(models.Advertisement.description.ilike(f"%{price}%"))
     if author:
         query = query.filter(models.Advertisement.author.ilike(f"%{author}%"))
     return query.all()
