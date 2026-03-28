@@ -48,6 +48,7 @@ pip install -r requirements.txt
 ## Эндпоинты
 
 - Создание объявления
+```
 POST /advertisement
 Content-Type: application/json
 {
@@ -56,8 +57,10 @@ Content-Type: application/json
   "price": 25000.00,
   "author": "Иван Петров"
 }
+```
 
 - Получение объявления по ID
+```
 GET /advertisement/1
 {
   "id": 1,
@@ -67,27 +70,34 @@ GET /advertisement/1
   "author": "Иван Петров",
   "created_at": "2024-03-28T10:30:00"
 }
+```
 
 - Частичное обновление объявления (PATCH)
+```
 PATCH /advertisement/1
 Content-Type: application/json
 {
   "price": 23000.00
 }
+```
 
 - Удаление объявления
+```
 DELETE /advertisement/1
+```
 
 - Поиск объявлений по параметрам
+```
 GET /advertisement/?title=велосипед&author=Иван&price=25000
+```
 
-5. API Документация
+## API Документация
 После запуска приложения автоматическая документация доступна по следующим адресам:
 - Swagger UI: http://localhost:8000/docs
 - ReDoc: http://localhost:8000/redoc
 
-6. Структура проекта
-
+## Структура проекта
+```
 📦 HomeWork_PyWeb_6_FastAPI
 ├── 📁 app/
 │   ├── 📄 main.py          # Точка входа, регистрация роутов
@@ -103,3 +113,4 @@ GET /advertisement/?title=велосипед&author=Иван&price=25000
 ├── 📄 .env.example         # Шаблон переменных окружения
 ├── 📄 .gitignore           # Исключения для Git
 └── 📄 README.md            # Этот файл
+```
