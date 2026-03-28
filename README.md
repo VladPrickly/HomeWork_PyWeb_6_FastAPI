@@ -43,7 +43,7 @@ pip install -r requirements.txt
 - создание БД: docker-compose up
 - запуск приложения uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
-Приложение запустится локально на http://localhost:8080/. БД будет создана при первом запуске.
+Приложение запустится локально на http://localhost:8000/. БД будет создана при первом запуске.
 
 ## Эндпоинты
 
