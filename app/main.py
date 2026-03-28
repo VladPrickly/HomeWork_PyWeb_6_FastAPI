@@ -2,7 +2,6 @@ import uvicorn
 from fastapi import FastAPI, Depends, Query, HTTPException, status
 from typing import Annotated, List, Optional
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.ext.asyncio import AsyncSession
 from asyncpg.exceptions import UniqueViolationError
 from db import Session
 from models import Advertisement
