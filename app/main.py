@@ -15,7 +15,7 @@ app = FastAPI(
     titel="Advertisement",
     description="Buy/Sell Service",
     version="0.0.1",
-    # lifespan=lifespan,
+    lifespan=lifespan,
 )
 
 SessionDep = Annotated[AsyncSession, Depends(get_db_session)]
