@@ -12,7 +12,7 @@ from dependencies import get_db_session
 from sqlalchemy.ext.asyncio import AsyncSession
 
 app = FastAPI(
-    titel="Advertisement",
+    title="Advertisement",
     description="Buy/Sell Service",
     version="0.0.1",
     lifespan=lifespan,
