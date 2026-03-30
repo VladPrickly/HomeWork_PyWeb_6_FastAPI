@@ -6,7 +6,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from asyncpg.exceptions import UniqueViolationError
 from models import Advertisement
 from schemas import AdvertisementCreate, AdvertisementUpdate
-
 from sqlalchemy import select
 from datetime import datetime, timezone
 
@@ -66,14 +65,6 @@ async def update_item(
     for key, value in update_dict.items():
         setattr(item, key, value)
 
-    # Если дело отмечено как выполненное, и finish_time ещё нет, ставим текущее время
-    if update_dict.get('done') and item.finish_time is None:
-        item.finish_time = datetime.now(timezone.utc)
-
-    # Если дело снова стало невыполненным, сбрасываем finish_time
-    if update_dict.get('done') is False:
-        item.finish_time = None
-
     await session.commit()
     await session.refresh(item)
     return item
@@ -96,14 +87,16 @@ async def search_item(db: AsyncSession,
             description: Optional[str] = None,
             price: Optional[float] = None,
             author: Optional[str] = None):
-    query = db.query(models.Advertisement)
-    if title:
-        query = query.filter(models.Advertisement.title.ilike(f"%{title}%"))
-    if description:
-        query = query.filter(models.Advertisement.description.ilike(f"%{description}%"))
-    if description:
-        query = query.filter(models.Advertisement.description.ilike(f"%{price}%"))
-    if author:
-        query = query.filter(models.Advertisement.author.ilike(f"%{author}%"))
-    return query.all()
+    query = select(Advertisement)
 
+    if title:
+        query = query.where(Advertisement.title.ilike(f"%{title}%"))
+    if description:
+        query = query.where(Advertisement.description.ilike(f"%{description}%"))
+    if price:
+        query = query.where(Advertisement.price == price)
+    if author:
+        query = query.where(Advertisement.author.ilike(f"%{author}%"))
+
+    result = await db.execute(query)
+    return result.scalars().all()
