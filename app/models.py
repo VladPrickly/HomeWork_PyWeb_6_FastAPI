@@ -28,12 +28,3 @@ class Advertisement(Base):
     def __repr__(self):
         return (f'<Advertisement (id = "{self.id}")>')
 
-
-class AdvertisementDescription(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-    id: int
-    title: str = Field(description="Заголовок объявления", min_length=1)
-    description: str = Field(description="Описание объявления", min_length=1)
-    price: float = Field(description="Цена", gt=0)
-    author: str = Field(description="Автор", min_length=1)
-    created_at: datetime = Field(description="Создано")
