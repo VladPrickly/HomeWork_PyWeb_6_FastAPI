@@ -1,11 +1,12 @@
-#version: '3.9'
+version: '3.9'
 
 services:
+
   db:
-    image: postgres:16.2-alpine3.19
+    image: postgres:14.3-alpine3.15
     container_name: netology_fastapi_postgres_db
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "5431:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -28,7 +29,6 @@ services:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
@@ -39,4 +39,3 @@ services:
 
 volumes:
   postgres_data:
-
