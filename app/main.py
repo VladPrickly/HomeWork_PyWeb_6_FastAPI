@@ -46,7 +46,7 @@ async def get_advertisement(advertisement_id: int, session: SessionDep):
            summary="Редактируем объявление")
 async def update_advertisement(advertisement_id: int, update_data: AdvertisementUpdate, session: SessionDep):
     updated_adv = await update_item(session, Advertisement, advertisement_id, update_data)
-    return AdvertisementUpdate(**updated_adv.to_dict)
+    return AdvertisementResponse(**updated_adv.to_dict)
 
 
 # DELETE
